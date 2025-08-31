@@ -1,0 +1,94 @@
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: bold 20px sans-serif; text-anchor: middle; fill: #2c3e50; }
+      .deadlock-title { font: bold 18px sans-serif; text-anchor: middle; fill: #e74c3c; }
+      .process { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .resource { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .process-text { font: bold 14px sans-serif; text-anchor: middle; fill: white; }
+      .resource-text { font: bold 14px sans-serif; text-anchor: middle; fill: white; }
+      .label { font: 12px sans-serif; text-anchor: middle; fill: #2c3e50; }
+      
+      .hold-arrow { stroke: #27ae60; stroke-width: 4; fill: none; marker-end: url(#hold-arrowhead); }
+      .request-arrow { stroke: #f39c12; stroke-width: 4; fill: none; marker-end: url(#request-arrowhead); stroke-dasharray: 8,4; }
+      
+      .hold-label { font: bold 12px sans-serif; fill: #27ae60; }
+      .request-label { font: bold 12px sans-serif; fill: #f39c12; }
+      .deadlock-warning { font: bold 16px sans-serif; text-anchor: middle; fill: #e74c3c; }
+      
+      .cycle-highlight { stroke: #e74c3c; stroke-width: 2; fill: none; stroke-dasharray: 10,5; }
+    </style>
+    
+    <marker id="hold-arrowhead" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#27ae60"/>
+    </marker>
+    
+    <marker id="request-arrowhead" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#f39c12"/>
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="300" y="30" class="title">데드락 상황 - 순환 대기</text>
+  
+  <!-- Deadlock cycle highlight (background circle) -->
+  <circle cx="300" cy="200" r="120" class="cycle-highlight"/>
+  
+  <!-- Process P0 (left) -->
+  <circle cx="200" cy="150" r="35" class="process"/>
+  <text x="200" y="155" class="process-text">P0</text>
+  <text x="200" y="195" class="label">프로세스 P0</text>
+  
+  <!-- Process P1 (right) -->
+  <circle cx="400" cy="250" r="35" class="process"/>
+  <text x="400" y="255" class="process-text">P1</text>
+  <text x="400" y="295" class="label">프로세스 P1</text>
+  
+  <!-- Resource R0 (top) -->
+  <rect x="270" y="120" width="60" height="60" rx="8" class="resource"/>
+  <text x="300" y="155" class="resource-text">R0</text>
+  <text x="300" y="195" class="label">리소스 R0</text>
+  
+  <!-- Resource R1 (bottom) -->
+  <rect x="270" y="260" width="60" height="60" rx="8" class="resource"/>
+  <text x="300" y="295" class="resource-text">R1</text>
+  <text x="300" y="335" class="label">리소스 R1</text>
+  
+  <!-- P0 holds R0 (solid green arrow) -->
+  <path d="M 235 140 Q 250 130 270 145" class="hold-arrow"/>
+  <text x="250" y="125" class="hold-label">점유</text>
+  
+  <!-- P0 requests R1 (dashed orange arrow) -->
+  <path d="M 220 180 Q 240 240 270 280" class="request-arrow"/>
+  <text x="230" y="240" class="request-label">요청</text>
+  
+  <!-- P1 holds R1 (solid green arrow) -->
+  <path d="M 365 260 Q 350 270 330 285" class="hold-arrow"/>
+  <text x="350" y="285" class="hold-label">점유</text>
+  
+  <!-- P1 requests R0 (dashed orange arrow) -->
+  <path d="M 380 220 Q 360 180 330 160" class="request-arrow"/>
+  <text x="370" y="180" class="request-label">요청</text>
+  
+  <!-- Deadlock warning -->
+  <text x="300" y="370" class="deadlock-warning">🔒 DEADLOCK 발생!</text>
+  
+  <!-- Legend -->
+  <rect x="50" y="300" width="120" height="80" fill="#fff5f5" stroke="#e74c3c" stroke-width="2" rx="5"/>
+  <text x="110" y="318" class="label" style="font-weight: bold; fill: #e74c3c;">데드락 조건</text>
+  
+  <text x="60" y="335" class="label">✓ 상호 배제</text>
+  <text x="60" y="350" class="label">✓ 점유 대기</text>
+  <text x="60" y="365" class="label">✓ 순환 대기</text>
+  
+  <!-- Status box -->
+  <rect x="450" y="60" width="140" height="120" fill="#f8f9fa" stroke="#bdc3c7" stroke-width="1" rx="5"/>
+  <text x="520" y="80" class="label" style="font-weight: bold;">현재 상황</text>
+  
+  <text x="460" y="100" class="label">P0 → R0 (보유)</text>
+  <text x="460" y="115" class="label">P0 → R1 (대기)</text>
+  <text x="460" y="135" class="label">P1 → R1 (보유)</text>
+  <text x="460" y="150" class="label">P1 → R0 (대기)</text>
+  
+  <text x="520" y="170" class="request-label">무한 대기 상태!</text>
+</svg>
