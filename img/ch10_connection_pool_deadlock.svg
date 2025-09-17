@@ -1,0 +1,113 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; text-anchor: middle; fill: #2c3e50; }
+      .subtitle { font: 16px sans-serif; text-anchor: middle; fill: #34495e; }
+      .thread-title { font: bold 14px sans-serif; text-anchor: middle; fill: white; }
+      .step-text { font: 12px sans-serif; fill: #2c3e50; }
+      .pool-title { font: bold 16px sans-serif; text-anchor: middle; fill: #e74c3c; }
+      .connection-text { font: 12px sans-serif; text-anchor: middle; fill: white; }
+      .deadlock-text { font: bold 14px sans-serif; text-anchor: middle; fill: #e74c3c; }
+      
+      .thread1 { fill: #3498db; }
+      .thread2 { fill: #9b59b6; }
+      .connection-free { fill: #27ae60; stroke: #1e8449; stroke-width: 2; }
+      .connection-used { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .waiting { fill: #f39c12; stroke: #d68910; stroke-width: 2; }
+      
+      .arrow { stroke: #2c3e50; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .deadlock-arrow { stroke: #e74c3c; stroke-width: 3; fill: none; marker-end: url(#deadlock-arrowhead); }
+      
+      .step-box { fill: #ecf0f1; stroke: #bdc3c7; stroke-width: 1; }
+      .pool-box { fill: #fff5f5; stroke: #e74c3c; stroke-width: 2; }
+    </style>
+    
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50"/>
+    </marker>
+    
+    <marker id="deadlock-arrowhead" markerWidth="12" markerHeight="9" refX="12" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#e74c3c"/>
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" class="title">커넥션 풀 데드락 시나리오</text>
+  <text x="400" y="50" class="subtitle">Pool Size: 2, Required Connections per Thread: 2</text>
+  
+  <!-- Connection Pool -->
+  <rect x="320" y="80" width="160" height="120" class="pool-box" rx="8"/>
+  <text x="400" y="100" class="pool-title">Connection Pool</text>
+  
+  <!-- Connection 1 -->
+  <circle cx="360" cy="130" r="20" class="connection-used"/>
+  <text x="360" y="135" class="connection-text">Conn 1</text>
+  
+  <!-- Connection 2 -->
+  <circle cx="440" cy="130" r="20" class="connection-used"/>
+  <text x="440" y="135" class="connection-text">Conn 2</text>
+  
+  <!-- Pool status -->
+  <text x="400" y="180" class="deadlock-text">Pool Status: FULL (2/2)</text>
+  
+  <!-- Thread 1 -->
+  <rect x="50" y="250" width="200" height="280" class="thread1" rx="10"/>
+  <text x="150" y="270" class="thread-title">Thread 1</text>
+  
+  <!-- Thread 1 Steps -->
+  <rect x="70" y="290" width="160" height="40" class="step-box" rx="5"/>
+  <text x="80" y="305" class="step-text">1. @Transactional 시작</text>
+  <text x="80" y="320" class="step-text">   Connection 1 획득 ✓</text>
+  
+  <rect x="70" y="340" width="160" height="40" class="step-box" rx="5"/>
+  <text x="80" y="355" class="step-text">2. 비즈니스 로직 실행</text>
+  <text x="80" y="370" class="step-text">   (Connection 1 사용중)</text>
+  
+  <rect x="70" y="390" width="160" height="60" class="waiting" rx="5"/>
+  <text x="80" y="410" class="step-text">3. @Transactional</text>
+  <text x="80" y="425" class="step-text">   REQUIRES_NEW 호출</text>
+  <text x="80" y="440" class="step-text">   Connection 2 대기중... ⏳</text>
+  
+  <rect x="70" y="460" width="160" height="40" class="step-box" rx="5"/>
+  <text x="80" y="475" class="step-text">4. 영원히 대기</text>
+  <text x="80" y="490" class="step-text">   (Thread 2가 Conn 2 보유)</text>
+  
+  <!-- Thread 2 -->
+  <rect x="550" y="250" width="200" height="280" class="thread2" rx="10"/>
+  <text x="650" y="270" class="thread-title">Thread 2</text>
+  
+  <!-- Thread 2 Steps -->
+  <rect x="570" y="290" width="160" height="40" class="step-box" rx="5"/>
+  <text x="580" y="305" class="step-text">1. @Transactional 시작</text>
+  <text x="580" y="320" class="step-text">   Connection 2 획득 ✓</text>
+  
+  <rect x="570" y="340" width="160" height="40" class="step-box" rx="5"/>
+  <text x="580" y="355" class="step-text">2. 비즈니스 로직 실행</text>
+  <text x="580" y="370" class="step-text">   (Connection 2 사용중)</text>
+  
+  <rect x="570" y="390" width="160" height="60" class="waiting" rx="5"/>
+  <text x="580" y="410" class="step-text">3. @Transactional</text>
+  <text x="580" y="425" class="step-text">   REQUIRES_NEW 호출</text>
+  <text x="580" y="440" class="step-text">   Connection 1 대기중... ⏳</text>
+  
+  <rect x="570" y="460" width="160" height="40" class="step-box" rx="5"/>
+  <text x="580" y="475" class="step-text">4. 영원히 대기</text>
+  <text x="580" y="490" class="step-text">   (Thread 1이 Conn 1 보유)</text>
+  
+  <!-- Arrows from threads to connections -->
+  <line x1="230" y1="310" x2="340" y2="130" class="arrow"/>
+  <text x="280" y="210" class="step-text">사용중</text>
+  
+  <line x1="570" y1="310" x2="460" y2="130" class="arrow"/>
+  <text x="520" y="210" class="step-text">사용중</text>
+  
+  <!-- Deadlock arrows -->
+  <path d="M 230 420 Q 300 420 300 380 Q 300 340 370 340" class="deadlock-arrow"/>
+  <text x="300" y="435" class="deadlock-text">대기중</text>
+  
+  <path d="M 570 420 Q 500 420 500 380 Q 500 340 430 340" class="deadlock-arrow"/>
+  <text x="500" y="435" class="deadlock-text">대기중</text>
+  
+  <!-- Deadlock indication -->
+  <text x="400" y="570" class="deadlock-text">🔒 DEADLOCK: 각 스레드가 상대방의 커넥션을 기다리며 무한 대기</text>
+</svg>
